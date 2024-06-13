@@ -13,6 +13,14 @@
      <?php
         error_reporting(0);
         include('../connection.php');
+        session_start();
+        if(!isset($_SESSION['account_ID'])){
+            header("Location: ../login/login.php");
+            exit();
+        }else if($_SESSION['AP']==0){
+            header("Location: ../main.php");
+            exit();
+        }
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $patient_name = $_POST["patient-name"];

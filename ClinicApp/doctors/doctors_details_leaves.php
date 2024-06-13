@@ -12,31 +12,19 @@
 <body>
     <?php
         include('../connection.php');
-
+        session_start();
+        if(!isset($_SESSION['account_ID'])){
+            header("Location: ../login/login.php");
+            exit();
+        }
         $doctor_ID=$_GET['id'];
 
         $query1 = "EXEC doctor_show_details $doctor_ID";
-
-        if(!isset($_GET['order']) || $_GET['order']=="latests"){
-            $query2 = "SELECT * FROM leaves_print WHERE doctor_ID=$doctor_ID ORDER BY holiday_end_date DESC";
-        }else{
-            $query2 = "SELECT * FROM leaves_print WHERE doctor_ID=$doctor_ID ORDER BY holiday_end_date ASC";
-        }
-
         $result1 = sqlsrv_query($conn, $query1);
-        $result2 = sqlsrv_query($conn, $query2);
-
         while($row = sqlsrv_fetch_array($result1)) {
             $doctor_name=$row['doctor_name'];
             $doctor_surname=$row['doctor_surname'];
             $doctor_status = $row['doctor_status'];
-        }
-
-        $numRows=0;
-        $data = array();
-        while($row = sqlsrv_fetch_array($result2)) {
-            $data[] = $row;
-            $numRows++;
         }
     ?>
     <div id="title-bar-bg">
@@ -51,13 +39,12 @@
                 <h2 id="order-label">Order: </h2>
                 <input type="number" value="<?php echo $doctor_ID ?>" class="display-none" name="id">
                 <select name="order" id="order" readonly>
-                    <option value="latests" <?php echo isset($_GET['order']) && $_GET['order'] == 'latests' ? 'selected' : ''; ?>>From The Latests</option>
-                    <option value="oldests" <?php echo isset($_GET['order']) && $_GET['order'] == 'oldests' ? 'selected' : ''; ?>>From The Oldests</option>
+                    <option value="latests">From The Latests</option>
+                    <option value="oldests">From The Oldests</option>
                 </select>
-                <button type="submit" id="submit-btn"><span class="material-symbols-outlined">search</span></button>
             </form>
             <?php 
-                if ($doctor_status==1){
+                if ($doctor_status==1 && $_SESSION['AP']==1){
             ?>
             <a href="doctors_leaves_add.php?id=<?php echo $doctor_ID ?>" class="container-top-btn">ADD LEAVE</a>
             <?php
@@ -70,35 +57,11 @@
                 <li class="col-name">TYPE</li>
                 <li class="col-name">START DATE</li>
                 <li class="col-name">END DATE</li>
-                <p id="leaves-count">LEAVES (<?php echo $numRows ?>)</p>
+                <p id="leaves-count">LEAVES (<a id="num-rows"></a>)</p>
             </ul>
-            <ul id="rows-place">
-                <?php
-                    foreach($data as $row) {
-                        $holiday_ID = $row['holiday_ID'];
-                        $holiday_type_name = $row['holiday_type_name'];
-                        $holiday_start_date = $row['holiday_start_date'];
-                        $formatted_holiday_start_date = $holiday_start_date->format('d.m.Y');
-                        $holiday_end_date = $row['holiday_end_date'];
-                        $formatted_holiday_end_date = $holiday_end_date->format('d.m.Y');
-                ?>
-                <li class="record">
-                    <div class="record-data-places">
-                        <div class="record-col record-col-id"><?php echo $holiday_ID ?></div>
-                        <div class="record-col"><?php echo $holiday_type_name ?></div>
-                        <div class="record-col"><?php echo $formatted_holiday_start_date ?></div>
-                        <div class="record-col"><?php echo $formatted_holiday_end_date ?></div>
-                    </div>
-                    <div class="record-btns-place">
-                        <a href="doctors_leaves_edit.php?id=<?php echo $holiday_ID ?>" class="record-btn">EDIT LEAVE</a>
-                        <a href="doctor_leaves_delete.php?doctor_id=<?php echo $doctor_ID ?>&leave_id=<?php echo $holiday_ID ?>" class="record-btn record-btn-leave">DELETE LEAVE</a>
-                    </div>
-                </li>
-                <?php
-                    }
-                ?>
-            </ul>
+            <ul id="rows-place"></ul>
         </div>
     </div>
+    <script src="js/doctors_details_leaves_get_records.js"></script>
 </body>
 </html>

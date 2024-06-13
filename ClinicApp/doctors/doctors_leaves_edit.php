@@ -13,7 +13,15 @@
      <?php
         // error_reporting(0);
         include('../connection.php');
-
+        session_start();
+        if(!isset($_SESSION['account_ID'])){
+            header("Location: ../login/login.php");
+            exit();
+        }else if($_SESSION['AP']==0){
+            header("Location: ../main.php");
+            exit();
+        }
+        
         $holiday_ID=$_GET['id'];
 
         $query1 = "SELECT * FROM leaves_print WHERE holiday_id=$holiday_ID";

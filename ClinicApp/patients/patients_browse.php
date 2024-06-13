@@ -12,34 +12,10 @@
 <body>
     <?php
         include('../connection.php');
-
-        $name='';
-        $surname='';
-
-        $numRows=0;
-
-        if(isset($_GET['name'])){
-            $name=$_GET['name'];
-        }
-        if(isset($_GET['surname'])){
-            $surname=$_GET['surname'];
-        }
-
-        
-        if(!isset($_GET['order']) || $_GET['order']=="latests"){
-            $query="SELECT * FROM patients_print WHERE patient_name LIKE '$name' + '%' AND patient_surname LIKE '$surname' + '%' ORDER BY patient_ID DESC";
-        }else if($_GET['order']=="oldests"){
-            $query="SELECT * FROM patients_print WHERE patient_name LIKE '$name' + '%' AND patient_surname LIKE '$surname' + '%' ORDER BY patient_ID ASC";
-        }else{
-            $query="SELECT * FROM patients_print WHERE patient_name LIKE '$name' + '%' AND patient_surname LIKE '$surname' + '%' ORDER BY patient_surname ASC";
-        }
-
-
-        $result=sqlsrv_query($conn,$query);
-        $data = array();
-        while($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-            $data[] = $row;
-            $numRows++;
+        session_start();
+        if(!isset($_SESSION['account_ID'])){
+            header("Location: ../login/login.php");
+            exit();
         }
     ?>
     <div id="title-bar-bg">
@@ -50,15 +26,14 @@
     <div id="container">
         <div id="container-top">
             <form action="#" id="filters"  autocomplete="off" METHOD="GET">
-                <input type="text" placeholder="Find Patient By Name" class="search-bar" name="name" value="<?php echo isset($_GET['name']) ? $_GET['name'] : ''; ?>" maxlength="50">
-                <input type="text" placeholder="Find Patient By Surname" class="search-bar" name="surname" value="<?php echo isset($_GET['surname']) ? $_GET['surname'] : ''; ?>" maxlength="50"> 
+                <input type="text" placeholder="Find Patient By Name" class="search-bar" name="name" maxlength="50" oninput="updateRecords()">
+                <input type="text" placeholder="Find Patient By Surname" class="search-bar" name="surname" maxlength="50" oninput="updateRecords()"> 
                 <h2 id="order-label">Order: </h2>
-                <select name="order" id="order" readonly>
-                    <option value="latests" <?php echo isset($_GET['order']) && $_GET['order'] == 'latests' ? 'selected' : ''; ?>>From The Latests (Records)</option>
-                    <option value="oldests" <?php echo isset($_GET['order']) && $_GET['order'] == 'oldests' ? 'selected' : ''; ?>>From The Oldests (Records)</option>
-                    <option value="aosurname" <?php echo isset($_GET['order']) && $_GET['order'] == 'aosurname' ? 'selected' : ''; ?>>By Surname In Alphabetical Order</option>
+                <select name="order" id="order" readonly onchange="updateRecords()">
+                    <option value="latests">From The Latests (Records)</option>
+                    <option value="oldests" >From The Oldests (Records)</option>
+                    <option value="aosurname">By Surname In Alphabetical Order</option>
                 </select>
-                <button type="submit" id="submit-btn"><span class="material-symbols-outlined">search</span></button>
             </form>
             <a href="patients_add.php" id="add-new-btn">ADD NEW PATIENT</a>
         </div>
@@ -68,36 +43,10 @@
             <li class="col-name">SURNAME</li>
             <li class="col-name">DATE OF BIRTH</li>
             <li class="col-name">PHONE</li>
-            <p id="patients-count">PATIENTS(<?php echo $numRows ?>)</p>
+            <p id="patients-count">PATIENTS(<a id="num-rows"></a>)</p>
         </ul>
-        <ul id="rows-place">
-            <?php
-                foreach($data as $row) {
-                    $patient_ID = $row['patient_ID'];
-                    $patient_name = $row['patient_name'];
-                    $patient_surname = $row['patient_surname'];
-                    $patient_date_of_birth = $row['patient_date_of_birth'];
-                    $formatted_patient_date_of_birth = $patient_date_of_birth->format('d.m.Y');
-                    $phone = $row['patient_phone'];
-                    $patient_phone = $row['patient_phone'];
-            ?>
-                    <li class="record">
-                        <div class="record-data-places">
-                            <div class="record-col record-col-id"><?php echo $patient_ID; ?></div>
-                            <div class="record-col"><?php echo $patient_name; ?></div>
-                            <div class="record-col"><?php echo $patient_surname; ?></div>
-                            <div class="record-col"><?php echo $formatted_patient_date_of_birth; ?></div>
-                            <div class="record-col"><?php echo $patient_phone; ?></div>
-                        </div>
-                        <div class="record-btns-place">
-                            <a href="patients_details.php?id=<?php echo $patient_ID?>" class="record-btn">SHOW DETAILS</a>
-                            <a href="#" class="record-btn">NEW APPOINTMENT</a>
-                        </div>
-                    </li>
-            <?php
-                }
-            ?>
-        </ul>
+        <ul id="rows-place"></ul>
     </div>
+    <script src="js/patient_browse.js"></script>
 </body>
 </html>

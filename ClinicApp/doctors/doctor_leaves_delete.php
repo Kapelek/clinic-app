@@ -1,6 +1,13 @@
 <?php
     include('../connection.php');
-
+    session_start();
+    if(!isset($_SESSION['account_ID'])){
+        header("Location: ../login/login.php");
+        exit();
+    }else if($_SESSION['AP']==0){
+        header("Location: ../main.php");
+        exit();
+    }
     $doctor_ID=$_GET['doctor_id'];
     $leave_ID=$_GET['leave_id'];
 

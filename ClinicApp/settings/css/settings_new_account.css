@@ -1,0 +1,117 @@
+body{
+    background-color: #f5f5f5;
+    margin:0px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#title-bar-bg{
+    width: 100%;
+    background-color: #36434d;
+    display: flex;
+    justify-content: center;
+    position:sticky;
+    top:0px;
+}
+
+#title-bar{
+    color: #f5f5f5!important;
+    font-size: 17px;
+    font-weight: 600;
+    height:50px;
+    padding: 10px;
+    box-sizing: border-box;
+    width:100%;
+    max-width: 1600px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+#title-bar a{
+    color: #f5f5f5!important;
+}
+
+#cl-h-t-rfrsh{
+    color:#b0b1b2;
+    background-color: #616a71;
+}
+#container{
+    width:100%;
+    max-width:1600px;
+    background-color: #2c373e;
+    margin:0 auto;
+    box-sizing: border-box;
+}
+
+#container-top{
+    height:400px;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #1e262b;
+    width:100%;
+    color:#f5f5f5;
+    font-size:17px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    padding-left:0px;
+    position: sticky;
+    top:50px;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+.btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1e262b;
+    color:#f5f5f5;
+    font-size:15px;
+    border: #4ccbc0 2px solid;
+    cursor: pointer;
+    border-radius: 10px;
+    padding:10px;
+    box-sizing: border-box;
+    font-weight: 600;
+    width:20%;
+}
+
+a{
+    text-decoration: none;
+}
+
+input{
+    outline: 0;
+}
+
+.error-message{
+    color:#4ccbc0;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+#back-btn{
+    cursor: pointer;
+    padding:5px;
+    background-color: #797a7a;
+    border-radius: 5px;
+    box-sizing: border-box;
+    position:absolute;
+    right:10px;
+}

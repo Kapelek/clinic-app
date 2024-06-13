@@ -13,7 +13,11 @@
 <body>
     <?php
         include('../connection.php');
-
+        session_start();
+        if(!isset($_SESSION['account_ID'])){
+            header("Location: ../login/login.php");
+            exit();
+        }
         $doctor_ID=$_GET['id'];
 
         $query1 = "EXEC doctor_show_details $doctor_ID";
@@ -47,20 +51,26 @@
     <div id="title-bar-bg">
         <div id="title-bar">
             <p>DOCTOR'S DETAILS - <?php echo $doctor_name," ",$doctor_surname?></p>
-            <span class="material-symbols-outlined" onclick="window.location.href=backUrl()" id="back-btn">arrow_back</span>
+            <span class="material-symbols-outlined" onclick="window.location.href='doctors_browse.php'" id="back-btn">arrow_back</span>
         </div>
     </div>
     <div id="container">
         <div id="container-top">
             <?php 
-                if ($doctor_status==1){
+                if ($doctor_status==1 && $_SESSION['AP']==1){
             ?>
             <a href="doctors_leaves_add.php?id=<?php echo $doctor_ID ?>" class="container-top-btn">ADD LEAVE</a>
             <a href="doctors_presence_add.php?id=<?php echo $doctor_ID ?>" class="container-top-btn">ADD PRESENCE</a>
             <?php 
                 }
             ?>
-            <a href="doctors_edit.php?id=<?php echo $doctor_ID ?>" class="container-top-btn">EDIT DOCTOR</a>
+            <?php
+                if ($_SESSION['AP']==1){
+            ?>
+                <a href="doctors_edit.php?id=<?php echo $doctor_ID ?>" class="container-top-btn">EDIT DOCTOR</a>
+            <?php 
+                }
+            ?>
         </div>
         <div id="informations">
             <div class="info-line"><span class="data-name">ID:</span> <?php echo $doctor_ID ?></div>

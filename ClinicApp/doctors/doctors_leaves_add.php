@@ -13,7 +13,15 @@
      <?php
         // error_reporting(0);
         include('../connection.php');
-
+        session_start();
+        if(!isset($_SESSION['account_ID'])){
+            header("Location: ../login/login.php");
+            exit();
+        }else if($_SESSION['AP']==0){
+            header("Location: ../main.php");
+            exit();
+        }
+        
         if(isset($_GET['id'])){
             $doctor_ID=$_GET['id'];
             $doctor_ID_from_GET=$doctor_ID;

@@ -13,7 +13,14 @@
      <?php
         // error_reporting(0);
         include('../connection.php');
-
+        session_start();
+        if(!isset($_SESSION['account_ID'])){
+            header("Location: ../login/login.php");
+            exit();
+        }else if($_SESSION['AP']==0){
+            header("Location: ../main.php");
+            exit();
+        }
         $patient_ID=$_GET['id'];
 
         $query1 = "EXEC patient_show_details $patient_ID";

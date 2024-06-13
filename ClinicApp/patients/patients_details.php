@@ -8,12 +8,15 @@
     <link rel="stylesheet" href="css/patients_details.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <script src="js/patients_details.js"></script>
 </head>
 <body>
     <?php
         include('../connection.php');
-
+        session_start();
+        if(!isset($_SESSION['account_ID'])){
+            header("Location: ../login/login.php");
+            exit();
+        } 
         $patient_ID=$_GET['id'];
 
         $query1 = "EXEC patient_show_details $patient_ID";
@@ -43,7 +46,7 @@
     <div id="title-bar-bg">
         <div id="title-bar">
             <p>PATIENT'S DETAILS - <?php echo $patient_name," ",$patient_surname?></p>
-            <span class="material-symbols-outlined" onclick="window.location.href=backUrl()" id="back-btn">arrow_back</span>
+            <span class="material-symbols-outlined" onclick="window.location.href='patients_browse.php'" id="back-btn">arrow_back</span>
         </div>
     </div>
     <div id="container">
